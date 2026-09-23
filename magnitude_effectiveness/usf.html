@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title> CS 360/560 Spring 2019 </title>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- bulma 0.7.2 and font awesome v5.7.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  
+  <style>
+    body {
+      font-family: "Lato", sans-serif
+    }
+  </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu">
+      <i class="fa fa-bars"> </i>
+    </a>
+
+    <a href="index.html" class="w3-bar-item w3-button w3-padding-large">
+      <span class="icon">
+        <i class="fas fa-home"> </i>
+      </span>
+      <span> Home </span>
+    </a>
+
+    <a href="Data.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-table"> </i>
+      </span>
+      <span> Data and Processing </span>
+    </a>
+
+    <a href="Visualization_1.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 1 </span>
+    </a>
+
+    <a href="Visualization_2.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 2 </span>
+    </a>
+
+    <a href="Visualization_3.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Visualization 3 </span>
+    </a>
+
+    <a href="Feedback.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+      <span class="icon">
+        <i class="fas fa-chart-area"> </i>
+      </span>
+      <span> Feedback </span>
+    </a>
+    
+    <div class="navbar-end">
+      <a href="About.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">
+        <span class="icon">
+          <i class="fas fa-info-circle"> </i>
+        </span>
+        <span> About </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:2000px;margin-top:46px">
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px">
+    <h2> <b>Data</b> </h2>
+    <h5 class="w3-justify"> RIAA (Recording Industry Association of America)
+    </h5>
+    <p class="w3-justify">
+      The data source is from RIAA, a trade organization that represents the recording industry in the United States.
+      The RIAA provides the most comprehensive data on the U.S. recorded music revenues dating all the way back to 1973. This is the definitive source of revenue data for the recorded music industry in the United States.
+      <br/>
+      <a href="https://www.riaa.com/reportcat/sales-revenue/">
+      - Sales and Revenue </a>
+      <br/>
+      <a href="https://www.riaa.com/reports/2018-riaa-shipment-revenue-statistics-riaa/">
+      - 2018 RIAA Shipment & Revenue Statistics </a>
+      <br/>
+      The original dataset has 2,944 rows and 16 columns listed below.
+      <br/>
+      Adjusted for Inflation Title, Adjusted for Inflation Notes, Adjusted for Inflation Flag, Metric Filter, Format Value # (Billion), Format Value # (Million), Value (For Charting), Axis (1), Label for Button (Pie), Billions (Show Totals), Millions (Show Totals), Format, Metric, Number of Records, Year, Value (Actual).
+    </p>
+    <h5 class="w3-justify"> IFPI (International Federation of the Phonographic Industry) </h5>
+    <p class="w3-justify">
+      The IFPI is a non-profit members' organization that represents the interests of the recording industry worldwide.
+      The Global Music Report is a major annual publication of IFPI and contains the definitive financial record of the recording industry worldwide. The Global Music Report data looks at the recorded music industry, across a range of formats and sectors such as streaming, digital downloads, physical sales, and performance rights and synchronization.
+      <br/>
+      <a href="https://www.ifpi.org/facts-and-stats.php">
+      - Facts and Stats </a>
+      <br/>
+      <a href="https://gmr.ifpi.org/about-the-report">
+      - Global Music Report </a>
+    </p>
+
+    <h3> <b>Processing</b> </h3>
+    <p class="w3-justify">
+      I deleted several columns listed below from the original dataset to load data efficiently. To focus on recorded music revenues by format, this data processing of deleting columns is useful to make visualization.
+      <br/>
+      <s> Adjusted for Inflation Title </s>, <s> Adjusted for Inflation Notes </s>, <s> Adjusted for Inflation Flag </s>, <s> Metric Filter </s>, <b> Format Value # (Billion) </b>, <b> Format Value # (Million) </b>, <b> Value (For Charting) </b>, <s> Axis (1) </s>, <s> Label for Button (Pie) </s>, <b> Billions (Show Totals) </b>, <b> Millions (Show Totals) </b>, <b> Format </b>, <b> Metric </b>, <s> Number of Records </s>, <b> Year </b>, <b> Value (Actual) </b>.
+    </p>
+  </div>
+</div>
+
+<!-- separator between sections -->
+<hr class="container">
+
+<!-- footer -->
+<footer class="footer">
+  <div class="content has-text-centered">
+    <small>
+      <a href="#top">
+        <span class="fas fa-arrow-up"> </span>
+        <span> Back to Top </span>
+      </a>
+      <br/>
+      <a href="/"> CS 360/560 Data Visualization </a>
+      &bullet;
+      <a href="https://myusf.usfca.edu/arts-sciences/computer-science">Department of Computer Science </a>
+      &bullet;
+      <a href="https://www.usfca.edu/"> University of San Franciscio </a>
+    </small>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,209 @@
+
+<!-- saved from url=(0051)https://ft-interactive.github.io/visual-vocabulary/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Visual Vocabulary</title>
+    <link rel="stylesheet" type="text/css" href="./Visual Vocabulary_files/mani.css">
+    <script src="./Visual Vocabulary_files/d3.v3.min.js.download" charset="utf-8"></script>
+    <script src="./Visual Vocabulary_files/v2-data.js.download"></script>
+<style></style><style></style><style id="LLPlatform"></style></head>
+<body><div id="shadowLL"><link rel="stylesheet" type="text/css" href="chrome-extension://hghakoefmnkhamdhenpbogkeopjlkpoa/sciteFont.css"><div id="shadowLL"><template shadowrootmode="open"><link rel="stylesheet" type="text/css" href="chrome-extension://hghakoefmnkhamdhenpbogkeopjlkpoa/contentScript.css"><style type="text/css">
+    :host,
+    :root {
+      --primary-color: #00B388;
+      --primary-dark-color: #00a17a;
+      --primary-contrast-color: #FFFFFF;
+      --secondary-color: #3B55AF;
+      --secondary-dark-color: #354d9e;
+      --secondary-contrast-color: #FFFFFF;
+      --secondary-button-color: #00B388;
+      --secondary-button-border-color: #00B388;
+    }
+  </style></template></div></div>
+    <style>
+        text{font-family:metric}
+    </style>
+    <script>  
+
+    d3.csv("chartTypes.csv",function(error, chartData){
+      let plotCategories=catData.categories
+
+      let container = d3.select("body")
+        .append("div")
+        .attr("class", 'container');
+
+      window.onresize=redraw;
+
+      container.append("h1")
+        .text("Visual Vocabulary")
+      container.append("h2")
+        .text("Designing with data")
+      container.append("p")
+        .text("There are so many ways to visualise data – how do we know which one to pick? Click on the coloured categories below to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations")
+        .attr('class', 'intro-text')
+      container.append("p")
+        .text("Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca")
+
+      let plotWidth=container.node().getBoundingClientRect().width;
+      let cellWidth=(plotWidth)/plotCategories.length
+      let menus=container.append("svg")
+        .attr("width",plotWidth)
+        .attr("height",100)
+      let category=menus.selectAll(".categ")
+        .data(plotCategories)
+        .enter()
+        .append("g")
+        .attr("class","categ")
+        .attr("id",function(d,i){return i})
+        .on("mouseover",pointer)
+        .on("mousedown",addLink)
+
+      category.append("text")
+        .attr("class","buttonText")
+        .attr("x",function(d,i){return (cellWidth*i)+(cellWidth/2)})
+        .attr("y",20)
+        .attr("height",20)
+        .attr("width",50)
+        .attr("fill",function(d) {return d.colour})
+        .text(function(d){return d.category})
+
+      category.append("rect")
+        .attr("class","button")
+        .attr("x",function(d,i){return cellWidth*i})
+        .attr("y",30)
+        .attr("height",10)
+        .attr("width",cellWidth)
+        .attr("fill",function(d){return d.colour})
+
+      function addCharts(lookUp){
+        let chartWidth=((plotWidth-60)/6)-10
+        let chartHolder=d3.select("#charts")
+          .append("div")
+        
+        let chart=chartHolder.selectAll(".chart")
+          .data(function(d){
+            let filtered=chartData.filter(function(d){
+                return d.category==lookUp
+            })
+            return filtered
+          })
+          .enter()
+          let div=chart.append("div")
+            .attr("class","chart")
+            .style("max-width",chartWidth)
+
+          div.append("div")
+            .attr("class","chart")
+            .style("height",55)
+            .html(function(d){return d.chartName})
+
+          div.append("img")
+            .attr("class","chart")
+            .style("background-color","#ffffff")
+            .style("opacity",function (d){
+              if(d.avail=="TRUE"){
+                return 0.85
+              }
+              else{return 0.2}
+            })
+            .attr("src",function(d){return "icons/"+d.img})
+            .attr("width", chartWidth-20)
+            .attr("height", chartWidth-20)
+
+          div.append("div")
+            .attr("class","chartDesc")
+            .html(function(d){return d.description})
+
+      }
+
+      function addInfo(el){
+        let loookUp=el.category
+        let infoPanel=container.append("div")
+          .attr("class","panel")
+          .attr("id","infoPanel")
+          .style("background-color",el.colour)
+        infoPanel.append("div")
+          .attr("class","infoHeading")
+          .html(loookUp)
+        infoPanel.append("div")
+          .attr("class","infoText")
+          .html(el.description)
+        infoPanel.append("div")
+          .attr("class","infoSubhead")
+          .html("Examples of use")
+        infoPanel.append("div")
+          .attr("class","infoText")
+          .html(el.example)
+        infoPanel.append("div")
+          .attr("class","infoSubhead")
+          .html("Chart types")
+        infoPanel.append("div")
+          .attr("id","charts")
+          .attr("class","charts")
+
+        addCharts(loookUp)
+      }
+
+      function addLink(d) {
+        //console.log("d",d)
+        d3.selectAll(".link")
+        .remove()
+        d3.selectAll(".panel")
+          .remove()
+        let x1=cellWidth*this.id+(cellWidth/2)
+        let lineData = [
+        {"x":x1,"y":40},
+        {"x":x1,"y":40},
+        {"x":x1,"y":40},
+        {"x":x1,"y":40}];
+        let lineData2 = [
+        {"x":x1,"y":40},
+        {"x":x1,"y":60},
+        {"x":10,"y":60},
+        {"x":10,"y":100}];
+
+        d3.selectAll(".link")
+        .data(d)
+        .enter()
+        menus.append("path")
+          .attr("class","link")
+          .attr("stroke",d.colour)
+          .attr("d", lineFunction(lineData))
+          .transition()
+          .duration(300)
+          .attr("d", lineFunction(lineData2))
+          .each("end", next)
+
+        function next(){
+          addInfo(d)
+        }
+      }
+
+      let lineFunction = d3.svg.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; })
+        .interpolate("linear");
+
+      function redraw() {
+        plotWidth=container.node().getBoundingClientRect().width;
+        cellWidth=plotWidth/plotCategories.length
+        menus.attr("width",plotWidth)
+        d3.selectAll(".button")
+          .attr("x",function(d,i){return cellWidth*i})
+          .attr("width",cellWidth)
+        d3.selectAll(".buttonText")
+          .attr("x",function(d,i){return (cellWidth*i)+(cellWidth/2)})
+          .attr("width",cellWidth)
+      }
+
+      function pointer() {
+          this.style.cursor='pointer'
+
+      }
+    })//end data load
+
+
+
+    </script>
+
+
+<div class="container"><h1>Visual Vocabulary</h1><h2>Designing with data</h2><p class="intro-text">There are so many ways to visualise data – how do we know which one to pick? Click on the coloured categories below to decide which data relationship is most important in your story, then look at the different types of chart within the category to form some initial ideas about what might work best. This list is not meant to be exhaustive, nor a wizard, but is a useful starting point for making informative and meaningful data visualisations</p><p>Inspired by the Graphic Continuum by Jon Schwabish and Severino Ribecca</p><svg width="1000" height="100"><g class="categ" id="0"><text class="buttonText" x="55.55555555555556" y="20" height="20" width="50" fill="#E6B00F">Deviation</text><rect class="button" x="0" y="30" height="10" width="111.11111111111111" fill="#E6B00F"></rect></g><g class="categ" id="1"><text class="buttonText" x="166.66666666666669" y="20" height="20" width="50" fill="#977348">Correlation</text><rect class="button" x="111.11111111111111" y="30" height="10" width="111.11111111111111" fill="#977348"></rect></g><g class="categ" id="2"><text class="buttonText" x="277.77777777777777" y="20" height="20" width="50" fill="#28903B">Change v Time</text><rect class="button" x="222.22222222222223" y="30" height="10" width="111.11111111111111" fill="#28903B"></rect></g><g class="categ" id="3"><text class="buttonText" x="388.8888888888889" y="20" height="20" width="50" fill="#008EB0">Ranking</text><rect class="button" x="333.33333333333337" y="30" height="10" width="111.11111111111111" fill="#008EB0"></rect></g><g class="categ" id="4"><text class="buttonText" x="500" y="20" height="20" width="50" fill="#F26522">Distribution</text><rect class="button" x="444.44444444444446" y="30" height="10" width="111.11111111111111" fill="#F26522"></rect></g><g class="categ" id="5" style="cursor: pointer;"><text class="buttonText" x="611.1111111111111" y="20" height="20" width="50" fill="#0054A6">Part to whole</text><rect class="button" x="555.5555555555555" y="30" height="10" width="111.11111111111111" fill="#0054A6"></rect></g><g class="categ" id="6" style="cursor: pointer;"><text class="buttonText" x="722.2222222222223" y="20" height="20" width="50" fill="#A3488C">Magnitude</text><rect class="button" x="666.6666666666667" y="30" height="10" width="111.11111111111111" fill="#A3488C"></rect></g><g class="categ" id="7" style="cursor: pointer;"><text class="buttonText" x="833.3333333333334" y="20" height="20" width="50" fill="#9C9D94">Spatial</text><rect class="button" x="777.7777777777778" y="30" height="10" width="111.11111111111111" fill="#9C9D94"></rect></g><g class="categ" id="8" style="cursor: pointer;"><text class="buttonText" x="944.4444444444445" y="20" height="20" width="50" fill="#ABBD67">Flow</text><rect class="button" x="888.8888888888889" y="30" height="10" width="111.11111111111111" fill="#ABBD67"></rect></g><path class="link" stroke="#A3488C" d="M722.2222222222223,40L722.2222222222223,60L10,60L10,100"></path></svg><div class="panel" id="infoPanel" style="background-color: rgb(163, 72, 140);"><div class="infoHeading">Magnitude</div><div class="infoText">Show size comparisons. These can be relative (just being able to see larger/bigger) or absolute (need to see fine differences). Usually these show a ‘counted’ number (for example, barrels, dollars or people) rather than a calculated rate or per cent</div><div class="infoSubhead">Examples of use</div><div class="infoText">Commodity production, market capitalisation</div><div class="infoSubhead">Chart types</div><div id="charts" class="charts"><div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">Column</div><img class="chart" src="./Visual Vocabulary_files/column-magnitude.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">The standard way to compare the size of things. Must always start at 0 on the axis</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">Bar</div><img class="chart" src="./Visual Vocabulary_files/bar-magnitude.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">The standard way to compare the size of things. Must always start at 0 on the axis. Good when the data are not time series and labels have long category names</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">column-grouped</div><img class="chart" src="./Visual Vocabulary_files/column-grouped.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">As per standard column but allows for multiple series. Can become tricky to read with more than 2 series</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">bar-grouped</div><img class="chart" src="./Visual Vocabulary_files/bar-grouped-magnitude.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">As per standard bar but allows for multiple series. Can become tricky to read with more than 2 series</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">bar-stacked-proportional</div><img class="chart" src="./Visual Vocabulary_files/bar-stacked-proportional-magnitude.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">A good way of showing the size and proportion of data at the same time - as long as the data are not too complicated</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">symbol-proportional</div><img class="chart" src="./Visual Vocabulary_files/symbol-proportional.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.2;"><div class="chartDesc">Use when there are big variations between values and/or seeing fne differences between data is not so important</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">isotope (pictogram)</div><img class="chart" src="./Visual Vocabulary_files/isotope.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.2;"><div class="chartDesc">Excellent solution in some instances - use only with whole numbers (do not slice off an arm to represent a decimal).</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">lollipop-h</div><img class="chart" src="./Visual Vocabulary_files/lollipop-h-magnitude.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">Lollipop charts draw more attention to the data value than standard bar/column and can also show rank effectively</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">lollipop-v</div><img class="chart" src="./Visual Vocabulary_files/lollipop-v-magnitude.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc">Lollipop charts draw more attention to the data value than standard bar/column and can also show rank effectively</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">Radar</div><img class="chart" src="./Visual Vocabulary_files/radar.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.2;"><div class="chartDesc">A space-efficient way of showing value pf multiple variables -  but make sure they are organised in a way that makes sense to reader.</div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">Bullet</div><img class="chart" src="./Visual Vocabulary_files/bullet.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.85;"><div class="chartDesc"></div></div><div class="chart" style="max-width: 146.667px;"><div class="chart" style="height: 55px;">Parallel coordinates</div><img class="chart" src="./Visual Vocabulary_files/parallel coordinates.svg" width="126.66666666666666" height="126.66666666666666" style="background-color: rgb(255, 255, 255); opacity: 0.2;"><div class="chartDesc">An alternative to radar charts - again, the arrngement of the variables is important. Usually benefits from highlighting values</div></div></div></div></div></div></body></html>
